@@ -1,0 +1,15 @@
+﻿/* 
+ * context menu item icons for the context menu that appears for translatable icons 
+ */
+
+#ext_GoToOwningPublication .image
+{
+	background-image:url({ThemePath}/Themes/Carbon/GoToOwningPublication.png);
+
+    /* 2013 icons 
+    background-image: url({ThemePath['CME']}/Sprites/cme_Sprites.16px_v7.0.0.568.23_.png);
+    background-position: 0 -1200px;
+    */
+    height: 16px;
+    width: 16px;
+}

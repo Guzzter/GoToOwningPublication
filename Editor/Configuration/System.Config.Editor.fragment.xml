@@ -1,0 +1,10 @@
+﻿<!-- This configuration fragment is intended to be inserted into
+     the Tridion.Web.UI system configuration (this is the Editor registration fragment)
+     This fragment should be placed inside the "/configuration/editors" element -->
+	 
+	<!-- added extension to navigate easily to the owning publication -->
+    <editor name="GoToOwningPublication">
+      <installpath>O:\Program Files (x86)\Tridion\extensions\GoToOwningPublication</installpath>
+      <configuration>Configuration\editor.config</configuration>
+      <vdir>GoToOwningPublication</vdir>
+    </editor>	
