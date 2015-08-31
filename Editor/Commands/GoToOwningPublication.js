@@ -6,10 +6,20 @@ Extensions.GoToOwningPublication = function Extensions$GoToOwningPublication() {
 };
 
 Extensions.GoToOwningPublication.prototype.isAvailable = function GoToOwningPublication$isAvailable(selection) {
-    if (selection.getItems().length != 1) {
-        return false;
-    }
-	return true;
+	if (selection.getItems().length == 1) {
+		var itemType = $models.getItemType(selection.getItem(0));
+		if (itemType == $const.ItemType.COMPONENT ||
+		itemType == $const.ItemType.COMPONENT_TEMPLATE ||
+		itemType == $const.ItemType.SCHEMA ||
+		itemType == $const.ItemType.TEMPLATE_BUILDING_BLOCK ||
+		itemType == $const.ItemType.FOLDER ||
+		itemType == $const.ItemType.STRUCTURE_GROUP ||
+		itemType == $const.ItemType.PAGE ||
+		itemType == $const.ItemType.PAGE_TEMPLATE) {
+			return true;
+		}
+	}
+	return false;
 };
 
 Extensions.GoToOwningPublication.prototype.isEnabled = function GoToOwningPublication$isEnabled(selection) {
@@ -38,35 +48,20 @@ Extensions.GoToOwningPublication.prototype._execute = function GoToOwningPublica
     }
 };
 
-function GoToOwningPublication_isShared(doc) {
-     var pubId = $xml.selectNodes(doc, "//tcm:Publication/@xlink:href")[0].value;   
-	 var owningPubId = $xml.selectNodes(doc, "//tcm:OwningPublication/@xlink:href")[0].value;   
-	 /*var isShared = $xml.selectNodes(doc, "//tcm:IsShared")[0].innerHTML;
-	 var isLocalized = $xml.selectNodes(doc, "//tcm:IsLocalized")[0].innerHTML;*/
-	 return owningPubId != pubId;
-}
-
 function GoToOwningPublication_goToParent(doc){ 
-	 if (GoToOwningPublication_isShared(doc)) {
-		var owningPubId = $xml.selectNodes(doc, "//tcm:OwningPublication/@xlink:href")[0].value;   
-		var it = $xml.selectNodes(doc, "//tcm:OrganizationalItem/@xlink:href")[0].value;
-		 
+	var pubId = $xml.selectNodes(doc, "//tcm:Publication/@xlink:href")[0].value;   
+	 var owningPubId = $xml.selectNodes(doc, "//tcm:OwningPublication/@xlink:href")[0].value;   
+	 if (owningPubId != pubId) {
+		var it = $xml.selectNodes(doc, "//tcm:Page/@ID")[0].value;
 		var owningPubNr = owningPubId.slice(6, owningPubId.lastIndexOf("-"));
 		var contextId = "tcm:"+owningPubNr + it.slice(it.indexOf("-"));
 		 
-		GoToOwningPublication_redirectBrowser(contextId);
+		$models.getNavigator().navigateToCmItem(contextId, false, window);
 	 }else if ($messages){
 		$messages.registerNotification('Current publication is the owner.');
 	 }else
 	 {
 		 alert('Current publication is the owner.');
 	 }
-}
-
-function GoToOwningPublication_redirectBrowser(contextId) {
-     var urlsel = document.location.href
-	 urlsel = urlsel.slice(0, urlsel.indexOf('.aspx')+5) + '#locationId=' + contextId;
-	 document.location.href = urlsel
-	 location.reload();
 }
 	
