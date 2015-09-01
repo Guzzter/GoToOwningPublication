@@ -39,20 +39,21 @@ Extensions.GoToOwningPublication.prototype._execute = function GoToOwningPublica
 	var it = m.getItem(tcmid);  
 	
 	if(it.isLoaded(true)){
-     GoToOwningPublication_goToParent(it.getXmlDocument());
+     GoToOwningPublication_goToParent(it);
     }else{
      it.load(false);
      e.addEventHandler(it, "load", function(){
-      GoToOwningPublication_goToParent(it.getXmlDocument())
+      GoToOwningPublication_goToParent(it)
      });
     }
 };
 
-function GoToOwningPublication_goToParent(doc){ 
+function GoToOwningPublication_goToParent(item){
+	var doc = item.getXmlDocument(); 
 	var pubId = $xml.selectNodes(doc, "//tcm:Publication/@xlink:href")[0].value;   
 	 var owningPubId = $xml.selectNodes(doc, "//tcm:OwningPublication/@xlink:href")[0].value;   
 	 if (owningPubId != pubId) {
-		var it = $xml.selectNodes(doc, "//tcm:Page/@ID")[0].value;
+		var it = item.getId();
 		var owningPubNr = owningPubId.slice(6, owningPubId.lastIndexOf("-"));
 		var contextId = "tcm:"+owningPubNr + it.slice(it.indexOf("-"));
 		 
